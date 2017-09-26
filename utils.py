@@ -63,7 +63,7 @@ def precision(X, y, classifier):
     for i in range(len(preds)):
         if preds[i] == y[i] and y[i] == 1:
             true_positives+=1
-        else if preds[i] != y[i] and preds[i] == 1:
+        elif preds[i] != y[i] and preds[i] == 1:
             false_positives+=1
     return true_positives/(true_positives + false_positives)
         
