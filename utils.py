@@ -91,7 +91,7 @@ def gen_batch(data, labels, num_batches = 100):
     idx = np.random.randint(data.shape[0], size = num_batches)
     return data[idx, :], labels[idx, :]
 
-def cross_validate(classifier, X, y, k = 10, verbose = False):
+def cross_validate(classifier, X, y, k = 10, num_iterations_per = 1, verbose = False):
     """Performs cross validation to return average training and testing error
     Params:
         classifier: a classifier with a fit(X, y) and predict(y) API
@@ -108,7 +108,7 @@ def cross_validate(classifier, X, y, k = 10, verbose = False):
     training_errors, testing_errors = [], []
     for i in range(k):
         if verbose:
-            print("using {} split for validation".format(i + 1))
+            print("using {} split for validation, iterating {} times".format(i + 1, num_iterations_per))
         # train on D - D(k), test on D(k)
         X_test, y_test = X_split[i], y_split[i]
         X_train = np.concatenate([X_split[j] for j in range(len(X_split))
@@ -121,7 +121,7 @@ def cross_validate(classifier, X, y, k = 10, verbose = False):
         train_error, test_error = get_errors_already_split(classifier, X_train,
                                                            y_train, X_test,
                                                            y_test,
-                                                           num_iterations=1)
+                                                           num_iterations=num_iterations_per)
         training_errors.append(train_error)
         testing_errors.append(test_error)
     # average the errors across the k trials and return.
@@ -300,7 +300,6 @@ def get_best_depth(X, y, k = 10, depths = [], verbose = False):
     # plt.show()
     # return the depth that corresponds to the lowest training error
     return min(depth_to_err.items(), key = lambda x: x[1])
-
 
 if __name__ == '__main__':
     print("running tests with decision tree")
